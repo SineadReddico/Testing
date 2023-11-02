@@ -1,0 +1,45 @@
+import csv
+
+# Function to read the sales data from CSV file, convert to list.
+def read_sales_data(csv_filename):
+    sales_data = []
+    with open(csv_filename, 'r') as csv_file:
+        spreadsheet = csv.DictReader(csv_file)
+        for row in spreadsheet:
+            month = row['month']
+            sales = int(row['sales'])
+            sales_data.append((month, sales))
+    return sales_data
+
+# Function below is to calculate the total sales from the sales CSV
+def calculate_total_sales(sales_data):
+    return sum(sales for _, sales in sales_data)
+
+# Function below is to write a summary of the data to a CSV file
+def write_summary_to_csv(summary_filename, sales_data, total_sales):
+    with open(summary_filename, 'w', newline='') as summary_file:
+        fieldnames = ['Month', 'Sales']
+        writer = csv.DictWriter(summary_file, fieldnames=fieldnames)
+        writer.writeheader()
+        for month, sales in sales_data:
+            writer.writerow({'Month': month, 'Sales': sales})
+        writer.writerow({'Month': 'Total Sales', 'Sales': total_sales})
+
+# Code below specifies the filenames (which we refer to above)
+csv_filename = 'sales.csv'
+summary_filename = 'sales_summary.csv'
+
+# Read sales data from the CSV file, calculate total sales and write summary to new CSV file
+sales_data = read_sales_data(csv_filename)
+total_sales = calculate_total_sales(sales_data)
+write_summary_to_csv(summary_filename, sales_data, total_sales)
+
+# Print Month and Sales in this current programme
+for month, sales in sales_data:
+    print(f"{month}: {sales}")
+
+# Print the total sales in this current programme 
+print(f'Total Sales: {total_sales}')
+
+# Print a message
+print(f'Sales data and summary have been written to {summary_filename}')
